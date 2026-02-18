@@ -1,57 +1,63 @@
 import React from "react";
-import clsx from "clsx";
+import { cva, type VariantProps } from "class-variance-authority";
+import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
- const variants = {
-  primary: "bg-[var(--primary-color)] text-white hover:bg-blue-700",
-  secondary: "bg-gray-600 text-white hover:bg-gray-700",
-  outline: "border border-blue-600 text-blue-600 hover:bg-blue-50",
-  danger: "bg-red-600 text-white hover:bg-red-700",
-};
+function cn(...inputs: any[]) {
+  return twMerge(clsx(inputs));
+}
 
- const sizes = {
-  sm: "px-3 py-1.5 text-xs",
-  md: "px-4 py-2 text-base",
-  lg: "px-6 py-3 text-lg",
-};
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-all duration-300 focus:outline-none",
+  {
+    variants: {
+      variant: {
+        primary: "bg-[var(--primary-color)] text-white hover:bg-blue-700",
+        secondary: "bg-gray-600 text-white hover:bg-gray-700",
+        outline: "border border-blue-600 text-blue-600 hover:bg-blue-50",
+        danger: "bg-red-600 text-white hover:bg-red-700",
+      },
+      size: {
+        sm: "px-3 py-1.5 text-xs",
+        md: "px-4 py-2 text-base",
+        lg: "px-6 py-3 text-lg",
+      },
+    },
+    defaultVariants: {
+      variant: "primary",
+      size: "md",
+    },
+  },
+);
 
-type ButtonVariant = "primary" | "secondary" | "outline" | "danger";
-type ButtonSize = "sm" | "md" | "lg";
-
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
+export interface ButtonProps
+  extends
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
   loading?: boolean;
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
 }
 
 const Button = ({
-  variant = "primary",
-  size = "md",
+  variant,
+  size,
   loading = false,
   icon,
   iconPosition = "left",
   children,
-  className = "",
+  className,
   disabled,
   ...rest
 }: ButtonProps) => {
-  const baseStyles =
-    "inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-all duration-300 focus:outline-none";
-
-  const disabledStyles =
-    disabled || loading ? "opacity-50 cursor-not-allowed" : "";
-
   return (
     <button
       disabled={disabled || loading}
-      className={clsx(
-        baseStyles,
-          variants[variant],
-          sizes[size],
-          disabledStyles,
-          className
-  )}
+      className={cn(
+        buttonVariants({ variant, size }),
+        (disabled || loading) && "opacity-50 cursor-not-allowed",
+        className,
+      )}
       {...rest}
     >
       {loading ? (
