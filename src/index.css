@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+
+@theme {
+  --color-action-primary: var(--color-action-primary);
+  --color-action-primary-hover: var(--color-action-primary-hover);
+  --color-action-secondary: var(--color-action-secondary);
+  --color-action-secondary-hover: var(--color-action-secondary-hover);
+
+  
+} 
